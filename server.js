@@ -2,6 +2,8 @@ import express from 'express';
 import connectDatabase from './config/db';
 import { check, validationResult } from 'express-validator';
 import cors from 'cors';
+import bcrypt from 'bcryptjs';
+import User from './models/User';
 
 // Initialize express application
 const app = express();
@@ -13,7 +15,7 @@ connectDatabase();
 app.use(express.json({ extended: false }));
 app.use(
   cors({
-    origin: 'http://localhost:3000'
+    origin: 'http://localhost:3000'  
   })
 );
 
@@ -44,12 +46,45 @@ app.post(
       'Please enter a password with 6 or more characters'
     ).isLength({ min: 6 })
   ],
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     } else {
-      return res.send(req.body);
+      //return res.send(req.body);
+      const { name, email, password } = req.body;
+      try {
+        //check if user exists
+        let user = await User.findOne({ email: email });  //capital U? UPDATE- THIS FIXED 'SERVER ERROR' - USER NOW SUCCESSFULLY REGISTERED
+        if(user) {
+          return res
+          .status(400)
+          .json( { errors: [{ msg: 'User already exists ' }] });
+
+
+        }
+
+        //create a new user
+        user = new User({
+          name: name,
+          email: email,
+          password: password
+        });
+
+        //encrypt the password
+        const salt = await bcrypt.genSalt(10); //bigger = more secure
+        user.password = await bcrypt.hash(password, salt); //salting mixes in random bytes, if two passwords are the same they won't decrypt the same if salted, if not they will decrypt the same
+
+        //save to db and return
+        await user.save();
+        res.send('User successfully registered');
+
+
+
+      } catch (error) {
+        res.status(500).send('Server error');
+        
+      }
     }
   }
 );
