@@ -3,6 +3,8 @@ import connectDatabase from './config/db';
 import { check, validationResult } from 'express-validator';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import config from 'config';
 import User from './models/User';
 
 // Initialize express application
@@ -77,7 +79,25 @@ app.post(
 
         //save to db and return
         await user.save();
-        res.send('User successfully registered');
+        //res.send('User successfully registered');
+
+        //generate and return jwt token
+        const payload = {
+          user: {
+            id: user.id
+          }
+        };
+
+        jwt.sign {
+          payload,
+          config.get('jwtSecret'),
+          { expiresIn: '10hr' },
+          (err, token) => {
+            if (err) throw err;
+            res.json({ token: token });
+          }
+
+        };
 
 
 
