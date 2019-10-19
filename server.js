@@ -88,7 +88,7 @@ app.post(
           }
         };
 
-        jwt.sign {
+        jwt.sign[
           payload,
           config.get('jwtSecret'),
           { expiresIn: '10hr' },
@@ -97,7 +97,7 @@ app.post(
             res.json({ token: token });
           }
 
-        };
+        ];
 
 
 
