@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 const Register = () => {
   const [userData, setUserData] = useState({
@@ -10,6 +11,7 @@ const Register = () => {
   });
 
   const { name, email, password, passwordConfirm } = userData;
+  const { errors } = errorData; 
 
   const onChange = e => {
     const { name, value } = e.target;
