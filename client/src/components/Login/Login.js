@@ -39,6 +39,7 @@ history.push('/')
   }
   catch (error) {
     localStorage.removeItem('token');
+
     setErrorData({
       ...errors,
       errors: error.response.data.errors
@@ -47,21 +48,37 @@ history.push('/')
   authenticateUser();
 }
 return (
-  <div><h2>Log IN</h2></div>
+  <div>
+    <h2>Log In</h2>
+    <div>
   
-  <input type = "text"
-  placeholder = "Password"
-  name= "password"
+  <input 
+  type = "text"
+  placeholder = "Email"
+  name= "email"
+  value={email}
+  onChange={e=> onChange(e)} />
+  </div>
+
+<div>
+  <input
+  type="text"
+  placeholder="Password"
+  name="password"
   value={password}
-  onChange={e=> onChange(e)}></input>
+  onChange={e => onChange(e)} />
+</div>
+
   <div>
     <button onClick={() => loginUser()}>Log In</button>
   </div>
   <div>
-    {errors && errors.map(error => <div key={error.msg>{error.msg}</div>})}
+    {errors && errors.map(error => 
+    <div key={error.msg}>{error.msg}</div>)}
+  </div>
   </div>
 
 )
 }
 
-export default Login
+export default Login;
