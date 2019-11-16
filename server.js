@@ -110,7 +110,31 @@ app.post(
       }
     }
   }
+
+
+  
 );
+
+
+
+/**
+   * @route GET api/auth
+   * @desc Authenticate user
+   */
+  app.get('api/auth', auth, async (req, res) => {
+
+    try {
+      const user = await User.findById(req.user.id);
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(500).send('Unknown server error');
+    }
+
+  }
+ 
+  
+  );
+
 
 // Connection listener
 const port = 5000;
