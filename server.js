@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 import config from 'config';
 import User from './models/User';
 import auth from './middleware/auth';
-import { UV_UDP_REUSEADDR } from 'constants';
+
 
 // Initialize express application
 const app = express();
