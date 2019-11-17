@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import config from 'config';
 import User from './models/User';
 import auth from './middleware/auth';
+import { UV_UDP_REUSEADDR } from 'constants';
 
 // Initialize express application
 const app = express();
@@ -112,8 +113,28 @@ app.post(
   }
 
 
+ 
   
 );
+
+const returnToken = (user, res) => {
+const payload = {
+  user: {
+    id: user.id
+  }
+}
+
+jwt.sign(
+  payload,
+  config.get('jwtSecret'),
+  { expiresIn: '10hr' },
+  (err, token) => {
+    if (err) throw err;
+    res.json({ token: token });
+  }
+);
+  };
+
 
 
 
