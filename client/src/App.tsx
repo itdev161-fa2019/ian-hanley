@@ -4,10 +4,10 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import './App.css';
 import Register from './components/Register/Register';
 import Login from './components/Login/Login';
-
+ 
 class App extends React.Component {
   state = {
-    data: null,
+    posts: [],
     token: null,
     user: null
   }
@@ -52,6 +52,29 @@ console.error('Error logging in: ${error');
       this.authenticateUser();
   }
 
+loadData = () => {
+const { token } = this.state;
+
+if (token) {
+  const config = {
+    headers: {
+      'x-auth-token': token 
+    }
+  };
+
+  axios 
+  .get('http://localhost:5000/api/posts', config)
+  .then(response => {
+    this.setState({
+      posts : response.data
+    });
+  })
+  .catch(error => {
+    console.error('Error fetching data: ${error}');
+  });
+}
+};
+
   logOut = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -60,7 +83,7 @@ console.error('Error logging in: ${error');
 
   render() {
 
-let { user, data } = this.state;
+let { user, posts } = this.state;
 const authProps = {
   authenticateUser: this.authenticateUser
 }
@@ -90,7 +113,7 @@ const authProps = {
               {user ?
               <React.Fragment> 
                 <div>Hello {user}! </div>
-                <div>{data}</div>
+                <div>{posts}</div>
 
               </React.Fragment> :
               <React.Fragment>

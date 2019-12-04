@@ -106,4 +106,4 @@ const [errorData, setErrorData] = useState[{errors: null}];
   )
 }
 
-export default Register;
+export default Register; 
